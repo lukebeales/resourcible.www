@@ -9,7 +9,7 @@ async function submitLead(form, statusEl) {
 
   if (FORM_ENDPOINT.includes("YOUR_FORM_ID")) {
     if (statusEl) {
-      statusEl.textContent = "Form endpoint not configured yet — see README.";
+      statusEl.textContent = "Form endpoint not configured yet: see README.";
       statusEl.className = "form-status error";
     }
     return;
@@ -25,7 +25,7 @@ async function submitLead(form, statusEl) {
     if (res.ok) {
       form.reset();
       if (statusEl) {
-        statusEl.textContent = "Thanks — we'll be in touch.";
+        statusEl.textContent = "Thanks! We'll be in touch.";
         statusEl.className = "form-status success";
       }
     } else {
