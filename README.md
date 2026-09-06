@@ -19,8 +19,10 @@ Plain HTML/CSS/JS, no build step:
 2. In the repo Settings → Pages, set **Source** to **GitHub Actions**.
 3. Push to `main` — the included workflow (`.github/workflows/pages.yml`) builds and
    deploys automatically.
-4. Optional: add a custom domain in Settings → Pages, and create a `CNAME` file here
-   with that domain.
+4. Custom domain is already configured via the `CNAME` file (`resourcible.com`). In
+   Settings → Pages, add `resourcible.com` as the custom domain and point its DNS at
+   GitHub Pages (an `A`/`ALIAS` record to GitHub's Pages IPs, or a `CNAME` record for
+   a `www` subdomain), then enable "Enforce HTTPS" once DNS has propagated.
 
 ## Lead capture
 
