@@ -347,37 +347,109 @@ a { color: var(--accent); }
 .card:hover .icon-badge { transform: scale(1.08); }
 .icon-badge svg { width: 20px; height: 20px; }
 
-/* Testimonials */
+/* Testimonials - Editorial Magazine Style */
 .testimonials {
-  padding: 56px 0;
+  padding: 80px 0;
   background: var(--bg-alt);
   border-bottom: 1px solid var(--border);
+  overflow: hidden;
 }
-.quote-grid {
+
+.testimonials-editorial {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 22px;
+  grid-template-columns: 1.05fr 0.95fr;
+  gap: 36px;
+  align-items: start;
 }
-.quote-card {
+
+.editorial-quote {
+  position: relative;
   margin: 0;
   background: #fff;
   border: 1px solid var(--border);
-  border-left: 3px solid var(--emerald);
   border-radius: var(--radius);
-  padding: 26px;
+  padding: 32px 30px 28px 32px;
   box-shadow: var(--shadow-sm);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
-.quote-card p {
-  font-size: 1rem;
+
+.editorial-quote:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-md);
+}
+
+.editorial-quote--first {
+  border-left: 4px solid var(--accent);
+}
+
+.editorial-quote--second {
+  margin-top: 36px;
+  border-top: 4px solid var(--emerald);
+  background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+}
+
+.quote-mark {
+  position: absolute;
+  top: -10px;
+  left: 20px;
+  font-family: Georgia, serif;
+  font-size: 4.5rem;
+  line-height: 1;
+  color: var(--accent);
+  opacity: 0.15;
+  pointer-events: none;
+}
+
+.editorial-quote--second .quote-mark {
+  color: var(--emerald);
+  left: auto;
+  right: 24px;
+}
+
+.editorial-quote p {
+  position: relative;
+  z-index: 1;
+  font-size: 1.02rem;
+  line-height: 1.65;
+  color: var(--heading);
+  margin: 0 0 18px;
   font-style: italic;
-  color: var(--fg);
-  margin: 0 0 14px;
 }
-.quote-card cite {
+
+.quote-highlight {
+  background: rgba(2, 132, 199, 0.1);
+  color: var(--accent-strong);
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-weight: 700;
+  font-style: normal;
+}
+
+.quote-highlight--emerald {
+  background: rgba(5, 150, 105, 0.12);
+  color: var(--emerald-strong);
+}
+
+.editorial-quote cite {
+  display: flex;
+  align-items: center;
+  gap: 8px;
   font-style: normal;
   font-weight: 700;
   font-size: 0.85rem;
   color: var(--muted);
+}
+
+.editorial-quote cite::before {
+  content: "";
+  display: inline-block;
+  width: 16px;
+  height: 2px;
+  background: var(--accent);
+}
+
+.editorial-quote--second cite::before {
+  background: var(--emerald);
 }
 
 /* Who it's for - Split Timeline Layout */
@@ -583,6 +655,13 @@ a { color: var(--accent); }
   .trust-item--full {
     grid-column: auto;
   }
+  .testimonials-editorial {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+  .editorial-quote--second {
+    margin-top: 0;
+  }
   .audience-split {
     grid-template-columns: 1fr;
     gap: 32px;
@@ -595,5 +674,4 @@ a { color: var(--accent); }
 @media (max-width: 640px) {
   .cards, .cards--four { grid-template-columns: 1fr; }
   .footer-inner { flex-direction: column; text-align: center; }
-  .quote-grid { grid-template-columns: 1fr; }
 }
