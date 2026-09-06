@@ -357,46 +357,47 @@ a { color: var(--accent); }
 
 .testimonials-editorial {
   display: grid;
-  grid-template-columns: 1.05fr 0.95fr;
-  gap: 36px;
+  grid-template-columns: 1fr 1fr;
+  gap: 28px;
   align-items: start;
 }
 
 .editorial-quote {
   position: relative;
   margin: 0;
-  background: #fff;
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 32px 30px 28px 32px;
-  box-shadow: var(--shadow-sm);
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  background: linear-gradient(180deg, rgba(255,255,255,0.98), rgba(248,250,252,0.95));
+  border-radius: 14px;
+  padding: 28px 28px 22px;
+  box-shadow: 0 12px 28px rgba(15, 23, 42, 0.06);
+  transition: transform 0.28s var(--scroll-ease), box-shadow 0.28s var(--scroll-ease);
+  border: none;
+  overflow: visible;
 }
 
 .editorial-quote:hover {
-  transform: translateY(-4px);
-  box-shadow: var(--shadow-md);
+  transform: translateY(-6px);
+  box-shadow: 0 20px 40px rgba(15, 23, 42, 0.08);
 }
 
 .editorial-quote--first {
-  border-left: 4px solid var(--accent);
+  border-left: 6px solid rgba(2, 132, 199, 0.12);
 }
 
 .editorial-quote--second {
-  margin-top: 36px;
-  border-top: 4px solid var(--emerald);
-  background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+  transform: translateY(26px);
+  border-top: none;
 }
 
 .quote-mark {
   position: absolute;
-  top: -10px;
-  left: 20px;
+  top: -18px;
+  left: 14px;
   font-family: Georgia, serif;
-  font-size: 4.5rem;
+  font-size: 5.5rem;
   line-height: 1;
   color: var(--accent);
-  opacity: 0.15;
+  opacity: 0.06;
+  transform: rotate(-8deg);
   pointer-events: none;
 }
 
@@ -409,10 +410,10 @@ a { color: var(--accent); }
 .editorial-quote p {
   position: relative;
   z-index: 1;
-  font-size: 1.02rem;
-  line-height: 1.65;
+  font-size: 1.05rem;
+  line-height: 1.6;
   color: var(--heading);
-  margin: 0 0 18px;
+  margin: 0 0 14px;
   font-style: italic;
 }
 
@@ -432,24 +433,25 @@ a { color: var(--accent); }
 
 .editorial-quote cite {
   display: flex;
-  align-items: center;
-  gap: 8px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
   font-style: normal;
   font-weight: 700;
-  font-size: 0.85rem;
+  font-size: 0.95rem;
   color: var(--muted);
+  margin-top: 8px;
 }
 
-.editorial-quote cite::before {
-  content: "";
-  display: inline-block;
-  width: 16px;
-  height: 2px;
-  background: var(--accent);
+.editorial-quote cite strong {
+  font-weight: 800;
+  color: var(--heading);
 }
 
-.editorial-quote--second cite::before {
-  background: var(--emerald);
+.editorial-quote cite .role {
+  font-weight: 400;
+  color: var(--muted);
+  font-size: 0.86rem;
 }
 
 /* Who it's for - Split Timeline Layout */
