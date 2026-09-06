@@ -52,3 +52,29 @@ mainForm.addEventListener("submit", (e) => {
   e.preventDefault();
   submitLead(mainForm, statusEl);
 });
+
+// Scroll-in animations using IntersectionObserver
+(function () {
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (prefersReducedMotion) return;
+
+  const elems = Array.from(document.querySelectorAll('.scroll-animate'));
+  if (!elems.length) return;
+
+  const io = new IntersectionObserver((entries, obs) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        const el = entry.target;
+        // allow per-element delay using data-delay (ms) or CSS custom property
+        const delay = el.getAttribute('data-delay');
+        if (delay) {
+          el.style.transitionDelay = `${parseInt(delay, 10)}ms`;
+        }
+        el.classList.add('in-view');
+        obs.unobserve(el);
+      }
+    });
+  }, { root: null, rootMargin: '0px 0px -10% 0px', threshold: 0.12 });
+
+  elems.forEach((el) => io.observe(el));
+})();

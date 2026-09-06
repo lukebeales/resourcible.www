@@ -619,6 +619,48 @@ a { color: var(--accent); }
   font-weight: 500;
 }
 
+/* Scroll-in animations (used with .scroll-animate and .in-view) */
+:root {
+  --scroll-duration: 640ms;
+  --scroll-ease: cubic-bezier(0.22, 0.9, 0.34, 1);
+}
+
+.scroll-animate {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity var(--scroll-duration) var(--scroll-ease), transform var(--scroll-duration) var(--scroll-ease);
+  will-change: opacity, transform;
+}
+
+.scroll-animate.in-view {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Directional variants */
+.scroll-animate.reveal-up { transform: translateY(18px); }
+.scroll-animate.reveal-left { transform: translateX(-18px); }
+.scroll-animate.reveal-right { transform: translateX(18px); }
+.scroll-animate.reveal-scale { transform: scale(0.98) translateY(8px); }
+.scroll-animate.in-view.reveal-left,
+.scroll-animate.in-view.reveal-right,
+.scroll-animate.in-view.reveal-scale { transform: none; }
+
+/* Stagger helpers: set `data-delay` on elements to offset their entrance */
+.scroll-animate[style*="--delay"] {
+  /* fallback if --delay is passed inline */
+}
+
+/* Respect users who prefer reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .scroll-animate,
+  .scroll-animate.in-view {
+    transition: none !important;
+    transform: none !important;
+    opacity: 1 !important;
+  }
+}
+
 /* Capture section */
 .capture { text-align: center; background: var(--bg-alt); }
 .capture p { color: var(--muted); }
