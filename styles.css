@@ -595,17 +595,8 @@ a { color: var(--accent); }
 }
 
 .big-quote::before {
-  content: "“";
-  position: absolute;
-  top: -40px;
-  left: 50%;
-  transform: translateX(-50%);
-  font-family: Georgia, serif;
-  font-size: 7rem;
-  line-height: 1;
-  color: var(--emerald);
-  opacity: 0.2;
-  pointer-events: none;
+  /* decorative quote mark removed to avoid implying a sourced quote */
+  content: none;
 }
 
 .big-quote p {
