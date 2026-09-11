@@ -543,7 +543,7 @@ a { color: var(--accent); }
 
 .audience-intro h2 {
   font-size: 1.85rem;
-  text-align: left;
+  text-align: center;
   margin: 0 0 14px;
   line-height: 1.25;
 }
