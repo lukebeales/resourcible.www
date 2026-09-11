@@ -526,17 +526,19 @@ a { color: var(--accent); }
   font-size: 0.86rem;
 }
 
-/* Who it's for - Split Timeline Layout */
-.audience-split {
-  display: grid;
-  grid-template-columns: 300px 1fr;
-  gap: 48px;
-  align-items: start;
+.audience-intro {
+  top: 90px;
 }
 
-.audience-intro {
-  position: sticky;
-  top: 90px;
+.audience-intro--wide {
+  position: static;
+  max-width: 680px;
+  margin: 0 auto 42px;
+  text-align: center;
+}
+
+.audience-intro--wide h2 {
+  text-align: center;
 }
 
 .audience-intro h2 {
@@ -553,6 +555,143 @@ a { color: var(--accent); }
   margin: 0 0 24px;
 }
 
+.founder-journey {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 28px;
+  position: relative;
+  align-items: start;
+}
+
+.journey-track {
+  position: relative;
+  display: grid;
+  gap: 14px;
+  padding: 26px 22px 22px;
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.72);
+  box-shadow: var(--shadow-sm);
+}
+
+.journey-track--alongside {
+  border-top: 4px solid var(--accent);
+}
+
+.journey-track--fulltime {
+  border-top: 4px solid var(--emerald);
+}
+
+.journey-track__header {
+  padding: 0 4px 12px;
+  border-bottom: 1px solid var(--border);
+}
+
+.journey-track__header h3 {
+  margin: 4px 0 6px;
+  font-size: 1.25rem;
+}
+
+.journey-track__header p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+
+.journey-kicker {
+  color: var(--accent-strong);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 0.72rem;
+  font-weight: 800;
+}
+
+.journey-track--fulltime .journey-kicker {
+  color: var(--emerald-strong);
+}
+
+.journey-stage {
+  display: grid;
+  grid-template-columns: 34px 1fr;
+  gap: 12px;
+  align-items: start;
+  padding: 14px 10px;
+  border-radius: 12px;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.journey-stage:hover {
+  background: var(--bg-alt);
+  transform: translateY(-2px);
+}
+
+.journey-stage--shared {
+  background: linear-gradient(135deg, rgba(2,132,199,0.08), rgba(5,150,105,0.1));
+  box-shadow: inset 0 0 0 1px rgba(5,150,105,0.14);
+}
+
+.journey-number {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--heading);
+  color: #fff;
+  font-size: 0.72rem;
+  font-weight: 800;
+}
+
+.journey-track--alongside .journey-stage:nth-child(3) .journey-number {
+  background: var(--accent);
+}
+
+.journey-track--fulltime .journey-stage:nth-child(3) .journey-number {
+  background: var(--emerald-strong);
+}
+
+.journey-stage h4 {
+  margin: 1px 0 4px;
+  color: var(--heading);
+  font-size: 0.98rem;
+}
+
+.journey-stage p {
+  margin: 0;
+  color: var(--fg);
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.journey-bridge {
+  grid-column: 1 / -1;
+  grid-row: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  margin: -6px 10% -16px;
+  color: var(--muted);
+  text-align: center;
+  font-size: 0.88rem;
+}
+
+.journey-bridge p {
+  max-width: 400px;
+  margin: 0;
+}
+
+.journey-bridge strong {
+  color: var(--heading);
+}
+
+.journey-bridge__line {
+  height: 1px;
+  flex: 1;
+  background: linear-gradient(90deg, transparent, var(--emerald), transparent);
+}
+
 .audience-callout {
   background: #fff;
   border: 1px solid var(--border);
@@ -562,95 +701,20 @@ a { color: var(--accent); }
   box-shadow: var(--shadow-sm);
 }
 
+.audience-callout--journey {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  max-width: 720px;
+  margin: 42px auto 0;
+}
+
 .audience-callout p {
   margin: 0 0 12px;
   font-weight: 700;
   color: var(--heading);
   font-size: 0.95rem;
-}
-
-.audience-timeline {
-  display: grid;
-  gap: 16px;
-  position: relative;
-}
-
-.audience-timeline::before {
-  content: "";
-  position: absolute;
-  top: 24px;
-  bottom: 24px;
-  left: 20px;
-  width: 2px;
-  background: linear-gradient(to bottom, var(--accent), var(--emerald), rgba(226, 232, 240, 0.6));
-  z-index: 0;
-}
-
-.timeline-item {
-  position: relative;
-  z-index: 1;
-  display: flex;
-  gap: 18px;
-  align-items: flex-start;
-  padding: 14px 16px;
-  border-radius: var(--radius);
-  transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.timeline-item:hover {
-  background: #fff;
-  transform: translateX(4px);
-  box-shadow: var(--shadow-sm);
-}
-
-.timeline-badge {
-  flex: 0 0 auto;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background: var(--heading);
-  color: #fff;
-  font-family: "Geist", sans-serif;
-  font-weight: 800;
-  font-size: 0.85rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: var(--shadow-sm);
-  border: 3px solid var(--bg);
-}
-
-.timeline-item:nth-child(3n+1) .timeline-badge {
-  background: var(--accent);
-}
-
-.timeline-item:nth-child(3n+2) .timeline-badge {
-  background: var(--emerald-strong);
-}
-
-.timeline-item:nth-child(3n) .timeline-badge {
-  background: var(--teal);
-}
-
-.timeline-content {
-  flex: 1;
-}
-
-.timeline-tag {
-  display: inline-block;
-  font-size: 0.8rem;
-  font-weight: 700;
-  color: var(--emerald-strong);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  margin-bottom: 4px;
-}
-
-.timeline-content p {
-  margin: 0;
-  color: var(--fg);
-  font-size: 0.95rem;
-  line-height: 1.55;
 }
 
 /* Big decorative quote */
@@ -769,16 +833,30 @@ a { color: var(--accent); }
   .editorial-quote--second {
     margin-top: 0;
   }
-  .audience-split {
-    grid-template-columns: 1fr;
-    gap: 32px;
-  }
   .audience-intro {
     position: static;
+  }
+  .founder-journey {
+    grid-template-columns: 1fr;
+  }
+  .journey-bridge {
+    grid-column: auto;
+    grid-row: auto;
+    margin: 0;
+  }
+  .journey-track--fulltime {
+    margin-top: 8px;
   }
 }
 
 @media (max-width: 640px) {
   .cards, .cards--four { grid-template-columns: 1fr; }
   .footer-inner { flex-direction: column; text-align: center; }
+  .audience-callout--journey {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+  .journey-bridge__line {
+    display: none;
+  }
 }
