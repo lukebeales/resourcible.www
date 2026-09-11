@@ -78,3 +78,113 @@ mainForm.addEventListener("submit", (e) => {
 
   elems.forEach((el) => io.observe(el));
 })();
+
+(function () {
+  const journey = document.getElementById('founder-journey');
+  if (!journey) return;
+
+  const spacer = journey.querySelector('.journey-spacer');
+  const spine = journey.querySelector('.journey-spine');
+  const nodes = Array.from(journey.querySelectorAll('.journey-node'));
+
+  function alignJourneyNodes() {
+    if (window.matchMedia('(max-width: 840px)').matches) {
+      // reset any transforms/inline tops on small screens
+      nodes.forEach((n) => { n.style.top = ''; n.style.transform = ''; });
+      journey.querySelectorAll('.journey-stage').forEach((s) => { s.style.transform = ''; });
+      spine.style.top = '';
+      spine.style.height = '';
+      return;
+    }
+
+    // reset inline tops/transforms so measurements reflect natural layout
+    nodes.forEach((n) => { n.style.top = ''; });
+    journey.querySelectorAll('.journey-stage').forEach((s) => { s.style.transform = ''; });
+
+    const spacerBounds = spacer.getBoundingClientRect();
+
+    // map nodes -> their corresponding stages (may be multiple) and measured center positions
+    const mapped = nodes.map((node) => {
+      const stages = Array.from(journey.querySelectorAll(`[data-align="${node.dataset.node}"]`));
+      const stageBounds = stages.map((s) => s.getBoundingClientRect());
+      const centersRel = stageBounds.map((b) => b.top - spacerBounds.top + (b.height / 2));
+      const centersAbs = stageBounds.map((b) => b.top + (b.height / 2));
+      // average center when multiple stages share the same node
+      const centerRel = centersRel.reduce((a, c) => a + c, 0) / centersRel.length;
+      const centerAbs = centersAbs.reduce((a, c) => a + c, 0) / centersAbs.length;
+      return { node, stages, stageBounds, centersRel, centersAbs, centerRel, centerAbs };
+    });
+
+    if (!mapped.length) return;
+
+    const start = mapped[0].centerRel;
+    const end = mapped.at(-1).centerRel;
+    const count = mapped.length;
+
+    // evenly distribute positions along the spine between first and last centers
+    const evenly = mapped.map((_, i) => (count > 1 ? start + (i * (end - start) / (count - 1)) : start));
+
+    // measure a node height (use first node) for centering if needed
+    const nodeRect = nodes[0].getBoundingClientRect();
+
+    // apply evenly spaced node tops and gently nudge stages to match
+    mapped.forEach((m, i) => {
+      const nodeTop = evenly[i];
+      m.node.style.top = `${nodeTop}px`;
+
+      const desiredCenterAbs = spacerBounds.top + nodeTop;
+      // nudge each stage individually to line up with the shared node
+      m.stages.forEach((stage, si) => {
+        let delta = desiredCenterAbs - m.centersAbs[si];
+        // small visual nudge for left-side node 3 to improve perceived alignment
+        const stageRect = stage.getBoundingClientRect();
+        const isLeftStage = (stageRect.right < spacerBounds.left + (spacerBounds.width / 2));
+        if (stage.dataset && stage.dataset.align === '3' && isLeftStage) {
+          delta += 6; // tweak this value if you want stronger/weaker nudge
+        }
+        stage.style.transform = `translateY(${delta}px)`;
+      });
+    });
+
+    spine.style.top = `${start}px`;
+    spine.style.height = `${end - start}px`;
+
+    // Draw connectors from the spine/node to the stage blocks
+    let connectors = spacer.querySelector('.journey-connectors');
+    if (!connectors) {
+      connectors = document.createElement('div');
+      connectors.className = 'journey-connectors';
+      spacer.appendChild(connectors);
+    }
+    connectors.innerHTML = '';
+
+    const nodeCenterX = spacerBounds.left + (spacerBounds.width / 2);
+    mapped.forEach((m, i) => {
+      const nodeTop = evenly[i];
+      // create a connector for each stage sharing this node
+      m.stageBounds.forEach((stageBounds, si) => {
+        const isRight = (stageBounds.left > spacerBounds.left + spacerBounds.width / 2);
+        const stageEdgeX = isRight ? stageBounds.left : stageBounds.right;
+        const left = Math.min(nodeCenterX, stageEdgeX) - spacerBounds.left;
+        const width = Math.max(6, Math.abs(nodeCenterX - stageEdgeX));
+
+        // compute the stage center after the visual nudge (delta)
+        const desiredCenterAbs = spacerBounds.top + nodeTop;
+        const delta = desiredCenterAbs - m.centersAbs[si];
+        const stageCenterRel = (m.centersAbs[si] + delta) - spacerBounds.top;
+        const top = stageCenterRel - 1; // center the 2px connector
+
+        const el = document.createElement('div');
+        el.className = 'connector';
+        el.style.left = `${left}px`;
+        el.style.width = `${width}px`;
+        el.style.top = `${top}px`;
+        connectors.appendChild(el);
+      });
+    });
+  }
+
+  window.addEventListener('resize', alignJourneyNodes);
+  window.addEventListener('load', () => requestAnimationFrame(alignJourneyNodes));
+  requestAnimationFrame(alignJourneyNodes);
+})();
