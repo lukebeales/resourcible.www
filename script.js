@@ -188,3 +188,60 @@ mainForm.addEventListener("submit", (e) => {
   window.addEventListener('load', () => requestAnimationFrame(alignJourneyNodes));
   requestAnimationFrame(alignJourneyNodes);
 })();
+
+/* Simple accessible carousel for case studies */
+(function () {
+  const carousel = document.querySelector('.carousel');
+  if (!carousel) return;
+
+  const track = carousel.querySelector('.carousel-track');
+  const slides = Array.from(carousel.querySelectorAll('.carousel-slide'));
+  const prev = carousel.querySelector('.carousel-prev');
+  const next = carousel.querySelector('.carousel-next');
+  const dotsWrap = carousel.querySelector('.carousel-dots');
+  let index = 0;
+  let autoplayId = null;
+
+  function update() {
+    const slideWidth = slides[0].getBoundingClientRect().width + 20; // include gap
+    const offset = -(slideWidth * index);
+    track.style.transform = `translateX(${offset}px)`;
+    // update dots
+    Array.from(dotsWrap.children).forEach((b, i) => b.setAttribute('aria-current', i === index ? 'true' : 'false'));
+  }
+
+  function createDots() {
+    slides.forEach((s, i) => {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.title = `Slide ${i + 1}`;
+      b.addEventListener('click', () => { index = i; update(); resetAutoplay(); });
+      if (i === 0) b.setAttribute('aria-current', 'true');
+      dotsWrap.appendChild(b);
+    });
+  }
+
+  function prevSlide() { index = (index - 1 + slides.length) % slides.length; update(); resetAutoplay(); }
+  function nextSlide() { index = (index + 1) % slides.length; update(); resetAutoplay(); }
+
+  function startAutoplay() {
+    if (autoplayId) clearInterval(autoplayId);
+    autoplayId = setInterval(() => { nextSlide(); }, 5000);
+  }
+  function resetAutoplay() { startAutoplay(); }
+
+  createDots();
+  prev && prev.addEventListener('click', prevSlide);
+  next && next.addEventListener('click', nextSlide);
+  carousel.addEventListener('mouseenter', () => clearInterval(autoplayId));
+  carousel.addEventListener('mouseleave', startAutoplay);
+  window.addEventListener('resize', update);
+  // keyboard
+  carousel.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowLeft') prevSlide();
+    if (e.key === 'ArrowRight') nextSlide();
+  });
+
+  // initial layout
+  requestAnimationFrame(() => { update(); startAutoplay(); });
+})();
