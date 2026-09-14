@@ -14,8 +14,14 @@
   --shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.06), 0 1px 2px rgba(15, 23, 42, 0.04);
   --shadow-md: 0 10px 28px rgba(15, 23, 42, 0.08);
   --max-width: 1000px;
-  --journey-left-img: url('https://source.unsplash.com/1200x900/?office,cafe,business');
-  --journey-right-img: url('https://source.unsplash.com/1200x900/?home-office,work-from-home');
+  /* Background photos for founder journey (local copies from Pexels)
+     Left (corporate): "Portrait of a confident businesswoman" by Tima
+       https://www.pexels.com/photo/woman-in-gray-blazer-sitting-by-the-table-with-laptop-computer-5717546/
+     Right (home): "Woman smiling at a desk" by Cristian Rojas
+       https://www.pexels.com/photo/woman-smiling-while-using-imac-7616799/
+  */
+  --journey-left-img: url('images/corporate-2.jpg');
+  --journey-right-img: url('images/home-c.jpg');
 }
 
 * { box-sizing: border-box; }
@@ -581,12 +587,12 @@ a { color: var(--accent); }
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  opacity: 0.06;
+  opacity: 0.12;
   pointer-events: none;
   z-index: 0;
-  filter: grayscale(20%) contrast(90%) brightness(110%);
-  -webkit-mask-image: linear-gradient(to right, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 65%);
-  mask-image: linear-gradient(to right, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 65%);
+  filter: grayscale(8%) contrast(92%) brightness(112%);
+  -webkit-mask-image: linear-gradient(to right, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 55%);
+  mask-image: linear-gradient(to right, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 55%);
 }
 .founder-journey::before {
   left: 0;
@@ -595,8 +601,8 @@ a { color: var(--accent); }
 .founder-journey::after {
   right: 0;
   background-image: var(--journey-right-img);
-  -webkit-mask-image: linear-gradient(to left, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 65%);
-  mask-image: linear-gradient(to left, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 65%);
+  -webkit-mask-image: linear-gradient(to left, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 55%);
+  mask-image: linear-gradient(to left, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 55%);
 }
 
 /* Ensure content sits above the decorative images */
@@ -853,9 +859,9 @@ a { color: var(--accent); }
 .case-carousel .case-lede { text-align: center; color: var(--muted); margin: 0 0 22px; }
 
 .carousel { display: flex; align-items: center; gap: 14px; position: relative; }
-.carousel-viewport { overflow: hidden; flex: 1 1 auto; padding: 0 6%; }
-.carousel-track { display: flex; gap: 24px; list-style: none; padding: 0; margin: 0; transition: transform 420ms var(--scroll-ease); will-change: transform; align-items: center; }
-.carousel-slide { min-width: 58%; max-width: 900px; background: #fff; border-radius: 12px; padding: 26px 24px; box-shadow: var(--shadow-sm); border: 1px solid rgba(226,232,240,0.8); }
+.carousel-viewport { overflow: hidden; flex: 1 1 auto; padding: 0 2%; }
+.carousel-track { display: flex; gap: 18px; list-style: none; padding: 0; margin: 0; transition: transform 420ms var(--scroll-ease); will-change: transform; align-items: center; }
+.carousel-slide { min-width: 82%; max-width: 1200px; background: #fff; border-radius: 14px; padding: 34px 30px; box-shadow: var(--shadow-md); border: 1px solid rgba(226,232,240,0.9); }
 .carousel-slide p { margin: 0; color: var(--heading); font-size: 1rem; line-height: 1.5; }
 .carousel-slide a { color: var(--accent); font-weight: 700; margin-left: 6px; }
 
