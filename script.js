@@ -195,53 +195,121 @@ mainForm.addEventListener("submit", (e) => {
   if (!carousel) return;
 
   const track = carousel.querySelector('.carousel-track');
-  const slides = Array.from(carousel.querySelectorAll('.carousel-slide'));
+  const originalSlides = Array.from(carousel.querySelectorAll('.carousel-slide'));
   const prev = carousel.querySelector('.carousel-prev');
   const next = carousel.querySelector('.carousel-next');
-  const dotsWrap = carousel.querySelector('.carousel-dots');
-  let index = 0;
+  // dots may be placed outside the .carousel (below it) — prefer a sibling lookup
+  const dotsWrap = carousel.querySelector('.carousel-dots') || carousel.parentElement.querySelector('.carousel-dots');
+  let index = 0; // index relative to originalSlides
   let autoplayId = null;
 
-  function update() {
-    const slideWidth = slides[0].getBoundingClientRect().width + 20; // include gap
-    const offset = -(slideWidth * index);
+  // helper to parse gap in px
+  function getGap() {
+    const gap = getComputedStyle(track).gap || getComputedStyle(track).getPropertyValue('gap');
+    return gap ? parseFloat(gap) : 0;
+  }
+
+  // build clones for infinite scroll
+  function buildClones() {
+    const firstClone = originalSlides[0].cloneNode(true);
+    const lastClone = originalSlides[originalSlides.length - 1].cloneNode(true);
+    firstClone.classList.add('clone');
+    lastClone.classList.add('clone');
+    track.appendChild(firstClone);
+    track.insertBefore(lastClone, track.firstChild);
+  }
+
+  buildClones();
+
+  // now query slides including clones
+  let slides = Array.from(track.querySelectorAll('.carousel-slide'));
+
+  // set starting translate so that the visual first slide is the real first (index 1 due to prepend)
+  function setInitialPosition() {
+    index = 0;
+    const slideWidth = slides[1].getBoundingClientRect().width;
+    const gap = getGap();
+    const offset = -((slideWidth + gap) * 1); // start at the first real slide
+    track.style.transition = 'none';
+    track.style.transform = `translateX(${offset}px)`;
+    // force reflow then restore transition
+    // eslint-disable-next-line no-unused-expressions
+    track.getBoundingClientRect();
+    track.style.transition = '';
+  }
+
+  function moveTo(k) {
+    const slideWidth = slides[1].getBoundingClientRect().width;
+    const gap = getGap();
+    const targetIndex = k + 1; // account for leading clone
+    const offset = -((slideWidth + gap) * targetIndex);
     track.style.transform = `translateX(${offset}px)`;
     // update dots
-    Array.from(dotsWrap.children).forEach((b, i) => b.setAttribute('aria-current', i === index ? 'true' : 'false'));
+    Array.from(dotsWrap.children).forEach((b, i) => b.setAttribute('aria-current', i === k ? 'true' : 'false'));
   }
 
   function createDots() {
-    slides.forEach((s, i) => {
+    originalSlides.forEach((s, i) => {
       const b = document.createElement('button');
       b.type = 'button';
       b.title = `Slide ${i + 1}`;
-      b.addEventListener('click', () => { index = i; update(); resetAutoplay(); });
+      b.addEventListener('click', () => { index = i; moveTo(index); resetAutoplay(); });
       if (i === 0) b.setAttribute('aria-current', 'true');
       dotsWrap.appendChild(b);
     });
   }
 
-  function prevSlide() { index = (index - 1 + slides.length) % slides.length; update(); resetAutoplay(); }
-  function nextSlide() { index = (index + 1) % slides.length; update(); resetAutoplay(); }
+  function prevSlide() { index = (index - 1 + originalSlides.length) % originalSlides.length; moveTo(index); resetAutoplay(); }
+  function nextSlide() { index = (index + 1) % originalSlides.length; moveTo(index); resetAutoplay(); }
+
+  // handle wrap-around after transition ends
+  track.addEventListener('transitionend', () => {
+    // slides are: [clone-last, real-0, real-1, ..., real-N-1, clone-first]
+    slides = Array.from(track.querySelectorAll('.carousel-slide'));
+    const slideWidth = slides[1].getBoundingClientRect().width;
+    const gap = getGap();
+    const currentVisualIndex = index + 1; // account for leading clone
+    if (currentVisualIndex === 0) return; // safety
+    // when we've moved past the last real slide to the clone-first, snap to real-first
+    if (currentVisualIndex > originalSlides.length) {
+      // jumped to clone-first at end
+      const offset = -((slideWidth + gap) * 1);
+      track.style.transition = 'none';
+      track.style.transform = `translateX(${offset}px)`;
+      // force reflow
+      // eslint-disable-next-line no-unused-expressions
+      track.getBoundingClientRect();
+      track.style.transition = '';
+    }
+    // when we've moved before the first real slide to clone-last, snap to real-last
+    if (currentVisualIndex === 0) {
+      const offset = -((slideWidth + gap) * originalSlides.length);
+      track.style.transition = 'none';
+      track.style.transform = `translateX(${offset}px)`;
+      // eslint-disable-next-line no-unused-expressions
+      track.getBoundingClientRect();
+      track.style.transition = '';
+    }
+  });
 
   function startAutoplay() {
     if (autoplayId) clearInterval(autoplayId);
-    autoplayId = setInterval(() => { nextSlide(); }, 5000);
+    autoplayId = setInterval(() => { nextSlide(); }, 4800);
   }
   function resetAutoplay() { startAutoplay(); }
 
   createDots();
-  prev && prev.addEventListener('click', prevSlide);
-  next && next.addEventListener('click', nextSlide);
+  prev && prev.addEventListener('click', () => { prevSlide(); });
+  next && next.addEventListener('click', () => { nextSlide(); });
   carousel.addEventListener('mouseenter', () => clearInterval(autoplayId));
   carousel.addEventListener('mouseleave', startAutoplay);
-  window.addEventListener('resize', update);
-  // keyboard
   carousel.addEventListener('keydown', (e) => {
     if (e.key === 'ArrowLeft') prevSlide();
     if (e.key === 'ArrowRight') nextSlide();
   });
 
+  window.addEventListener('resize', () => { setInitialPosition(); });
+
   // initial layout
-  requestAnimationFrame(() => { update(); startAutoplay(); });
+  requestAnimationFrame(() => { setInitialPosition(); startAutoplay(); });
 })();
