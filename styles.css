@@ -610,6 +610,10 @@ a { color: var(--accent); }
   mask-image: linear-gradient(to left, rgba(0,0,0,1) 0%, rgba(0,0,0,0.6) 40%, rgba(0,0,0,0) 55%);
 }
 
+/* Make each image cover and center within its half, and increase visibility */
+.founder-journey::before { background-position: left center; opacity: 0.28; }
+.founder-journey::after  { background-position: right center; opacity: 0.28; }
+
 /* Ensure content sits above the decorative images */
 .founder-journey > * { position: relative; z-index: 1; }
 
@@ -670,6 +674,20 @@ a { color: var(--accent); }
   transition: background 0.2s ease, transform 0.2s ease;
   z-index: 1;
 }
+
+/* Make timeline text cards sit on a subtle transparent white panel so they
+   remain readable over the decorative photos. Do not change layout or text.
+*/
+.journey-stage,
+.journey-track-header {
+  background: rgba(248,250,252,0.72);
+  border: 1px solid rgba(226,232,240,0.7);
+  box-shadow: var(--shadow-sm);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.journey-stage:hover { background: rgba(248,250,252,0.9); }
 
 .journey-stage:hover {
   background: var(--bg-alt);
